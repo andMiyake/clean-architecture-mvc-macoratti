@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CleanArchMvc.Domain.Interfaces
-{
-    public interface ICategoryRepository
-    {
-        Task<IEnumerable<Category>> GetCategoriesAsync();
-        Task<Category> GetByIdAsync(int? id);
+namespace CleanArchMvc.Domain.Interfaces;
 
-        Task<Category> CreateAsync(Category category);
-        Task<Category> UpdateAsync(Category category);
-        Task<Category> RemoveAsync(Category category);
-    }
+public interface ICategoryRepository
+{
+    Task<IEnumerable<Category>> GetCategories();
+    Task<Category> GetById(int? id);
+
+    Task<Category> Create(Category category);
+    Task<Category> Update(Category category);
+    Task<Category> Remove(Category category);
 }

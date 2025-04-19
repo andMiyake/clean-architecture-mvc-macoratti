@@ -2,35 +2,30 @@
 using CleanArchMvc.Domain.Entities;
 using CleanArchMvc.Domain.Interfaces;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace CleanArchMvc.Application.Products.Handlers
+namespace CleanArchMvc.Application.Products.Handlers;
+
+public class ProductCreateCommandHandler : IRequestHandler<ProductCreateCommand, Product>
 {
-    public class ProductCreateCommandHandler : IRequestHandler<ProductCreateCommand, Product>
+    private readonly IProductRepository _productRepository;
+    public ProductCreateCommandHandler(IProductRepository productRepository)
     {
-        private readonly IProductRepository _productRepository;
+        _productRepository = productRepository;
+    }
+    public async Task<Product> Handle(ProductCreateCommand request,
+        CancellationToken cancellationToken)
+    {
+        var product = new Product(request.Name, request.Description, request.Price,
+                          request.Stock, request.Image);
 
-        public ProductCreateCommandHandler(IProductRepository productRepository)
+        if (product == null)
         {
-            _productRepository = productRepository;
+            throw new ApplicationException($"Error creating entity.");
         }
-
-        public async Task<Product> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
+        else
         {
-            var product = new Product(request.Name, request.Description,
-                                        request.Price, request.Stock, request.Image);
-
-            if (product == null)
-            {
-                throw new ApplicationException($"Error creating entity."); 
-            }
-            else
-            {
-                product.CategoryId = request.CategoryId;
-                return await _productRepository.CreateAsync(product);
-            }
+            product.CategoryId = request.CategoryId;
+            return await _productRepository.CreateAsync(product);
         }
     }
 }
